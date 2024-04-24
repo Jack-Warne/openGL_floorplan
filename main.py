@@ -9,6 +9,8 @@ from scene import Scene
 from scene_renderer import SceneRenderer
 
 
+
+
 class GraphicsEngine:
     def __init__(self, win_size=(1600, 900)):
         # init pygame modules
@@ -42,6 +44,9 @@ class GraphicsEngine:
         self.scene = Scene(self)
         # renderer
         self.scene_renderer = SceneRenderer(self)
+        #game variables
+        self.game_paused = False
+        self.menu_state = "home"
 
     def check_events(self):
         for event in pg.event.get():
@@ -50,6 +55,8 @@ class GraphicsEngine:
                 self.scene_renderer.destroy()
                 pg.quit()
                 sys.exit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                self.game_paused = True
 
     def render(self):
         # clear framebuffer
