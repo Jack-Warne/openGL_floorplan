@@ -1,4 +1,3 @@
-# 3D-Graphics-Engine
-OpenGL Graphics Engine in Python ( Pygame, ModernGL ) 
+# OpenGL_floorplan
 
-![opengl](/screenshot/0.jpg)
+Using OpenGl and ModernGL to create a 3D render of a floor plan and calculate the number of materials needed to build the house to scale.
