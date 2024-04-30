@@ -7,6 +7,7 @@ from light import Light
 from mesh import Mesh
 from scene import Scene
 from scene_renderer import SceneRenderer
+from home import Home
 
 
 
@@ -44,6 +45,9 @@ class GraphicsEngine:
         self.scene = Scene(self)
         # renderer
         self.scene_renderer = SceneRenderer(self)
+        # menu screens
+        
+
         #game variables
         self.game_paused = False
         self.menu_state = "home"
@@ -68,11 +72,20 @@ class GraphicsEngine:
 
     def get_time(self):
         self.time = pg.time.get_ticks() * 0.001
+    
+    def check_state(self):
+        if self.menu_state == "home":
+            self.home = Home(self)
+        if self.menu_state == "menu":
+            ...
+        if self.menu_state == "load":
+            ...
 
     def run(self):
         while True:
             self.get_time()
             self.check_events()
+            self.check_state()
             self.camera.update()
             self.render()
             self.delta_time = self.clock.tick(60)
