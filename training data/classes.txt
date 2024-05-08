@@ -13,9 +13,23 @@ ribs
 pulled pork
 hamburger
 cavity
-outerwall
-window
 door
-countertop
-sink
+bathroom
+stairs
 basin
+window
+bathtub
+toilet
+sink
+countertop
+store-door
+dining-table
+chair
+coffee-table
+sofa
+shower
+oven
+bed
+countertop#
+basin]
+door]
