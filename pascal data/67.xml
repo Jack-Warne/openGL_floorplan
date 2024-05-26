@@ -167,28 +167,4 @@
 			<ymax>665</ymax>
 		</bndbox>
 	</object>
-	<object>
-		<name>cupboard-door</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>377</xmin>
-			<ymin>678</ymin>
-			<xmax>405</xmax>
-			<ymax>745</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>cupboard door</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>407</xmin>
-			<ymin>810</ymin>
-			<xmax>456</xmax>
-			<ymax>827</ymax>
-		</bndbox>
-	</object>
 </annotation>
