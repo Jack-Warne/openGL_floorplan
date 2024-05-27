@@ -1,0 +1,12 @@
+train: train
+val: test
+nc: 8
+names: ['door',
+        'window',
+        'toilet',
+        'basin',
+        'bathtub',
+        'shower',
+        'sink',
+        'stairs'
+]

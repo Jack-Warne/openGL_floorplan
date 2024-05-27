@@ -80,8 +80,8 @@ def labelEncoding(x):
             }
     return labels[x]
 
-train_df.loc[:, 'id'] = train_df['name'].apply(labelEncoding)
-test_df.loc[:, 'id'] = test_df['name'].apply(labelEncoding)
+train_df.loc['id'] = train_df['name'].apply(labelEncoding)
+test_df.loc['id'] = test_df['name'].apply(labelEncoding)
 
 train_folder = 'pascal data/train'
 test_folder = 'pascal data/test'
