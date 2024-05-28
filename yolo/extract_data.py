@@ -5,6 +5,12 @@ from functools import reduce
 from xml.etree import ElementTree as et
 from shutil import move
 
+###############################################################
+## THIS IS A PROGRAM TO TURN XML DATA FILES INTO YOLO FORMAT ##
+###############################################################
+
+
+
 # Load all xml files in the folder
 xml_list = glob('./pascal data/*.xml')
 # Data cleaning: replace '\\' with '/'
