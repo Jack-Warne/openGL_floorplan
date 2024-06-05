@@ -230,8 +230,8 @@ yolo.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
 # load image
 # from image get the detections
-img = result
-image = img.copy()
+img = cv2.imread('floorplan.jpeg')
+image = result.copy()
 
 #cv2.imshow('image', img)
 #cv2.waitKey(0)
@@ -308,6 +308,7 @@ for ind in index:
     cv2.putText(image, text, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 0.7,(0,0,0),1)
 
 cv2.imshow('original', img)
+cv2.imshow('result', result)
 cv2.imshow('yolo_prediction', image)
 
 cv2.waitKey(0)
