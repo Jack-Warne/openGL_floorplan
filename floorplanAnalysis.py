@@ -292,24 +292,50 @@ confidences_np = np.array(confidences).tolist()
 index = cv2.dnn.NMSBoxes(boxes_np, confidences_np, 0.25, 0.3).flatten() # this gives index positions
 
 # draw the bounding box
-for ind in index:
-    # extract bounding boxes
-    x,y,w,h = boxes_np[ind]
-    # take confidences
+vertex_data = []
+
+for ind in range(len(boxes_np)):
+    # Extract bounding box coordinates
+    x, y, w, h = boxes_np[ind]
+    # Take confidences
     bb_conf = confidences_np[ind]
-    # take classes
-    classes_id  = classes[ind]
+    # Take classes
+    classes_id = classes[ind]
     class_name = labels[classes_id]
 
+    # Prepare text for display
     text = f'{class_name}: {bb_conf}%'
     
-    cv2.rectangle(image, (x,y), (x+w, y+h), (0,255,0), 2)
-    cv2.rectangle(image, (x,y-30),(x+w,y),(255,255,255), -1)
-    cv2.putText(image, text, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 0.7,(0,0,0),1)
+    # Draw bounding box and label on the image
+    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    cv2.rectangle(image, (x, y - 30), (x + w, y), (255, 255, 255), -1)
+    cv2.putText(image, text, (x, y - 10), cv2.FONT_HERSHEY_PLAIN, 0.7, (0, 0, 0), 1)
+    
+    # Calculate vertices of the bounding box
+    top_left = (x, y)
+    top_right = (x + w, y)
+    bottom_left = (x, y + h)
+    bottom_right = (x + w, y + h)
+    
+    # Store vertex data in the list
+    vertex_data.append({
+        'class_name': class_name,
+        'confidence': bb_conf,
+        'vertices': {
+            'top_left': top_left,
+            'top_right': top_right,
+            'bottom_left': bottom_left,
+            'bottom_right': bottom_right
+        }
+    })
 
-cv2.imshow('original', img)
-cv2.imshow('result', result)
-cv2.imshow('yolo_prediction', image)
+# Now vertex_data contains all the vertex details of the bounding boxes with their names
+for data in vertex_data:
+    print(f"Class: {data['class_name']}, Confidence: {data['confidence']}%")
+    print(f"Vertices: {data['vertices']}")
+#cv2.imshow('original', img)
+#cv2.imshow('result', result)
+#cv2.imshow('yolo_prediction', image)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows
