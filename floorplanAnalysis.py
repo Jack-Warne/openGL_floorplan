@@ -262,6 +262,9 @@ image_w, image_h = input_image.shape[:2]
 x_factor = image_w/640
 y_factor = image_h/640 # these are expected to be the same as the image should be square
 
+door_sizes =[]
+ds=1
+
 for i in range(len(detections)):
     row = detections[i]
     confidence = row[4] # confidence of detection of object
@@ -278,6 +281,9 @@ for i in range(len(detections)):
             height = int(h*y_factor)
             
             box = np.array([left,top,width,height])
+            if labels[class_id] == 'door':
+                door_sizes.append(width*height)
+                ds = ds + 1  
 
             # append values into the list
             confidences.append(confidence)
@@ -291,51 +297,41 @@ confidences_np = np.array(confidences).tolist()
 # apply NMS
 index = cv2.dnn.NMSBoxes(boxes_np, confidences_np, 0.25, 0.3).flatten() # this gives index positions
 
+
+#print(door_sizes)
+
+
+average_area = sum(door_sizes) / len(door_sizes)
+print(average_area)
 # draw the bounding box
-vertex_data = []
-
-for ind in range(len(boxes_np)):
-    # Extract bounding box coordinates
-    x, y, w, h = boxes_np[ind]
-    # Take confidences
+for ind in index:
+    # extract bounding boxes
+    x,y,w,h = boxes_np[ind]
+    # take confidences
     bb_conf = confidences_np[ind]
-    # Take classes
-    classes_id = classes[ind]
+    # take classes
+    classes_id  = classes[ind]
     class_name = labels[classes_id]
+    width = int(w*x_factor)
+    height = int(h*y_factor)
+    if class_name == 'door':
+        if (width * height) > average_area * 0.8 or (width * height) * (width * height) < average_area * 1.15:
+            text = f'{class_name}: {bb_conf}%'
+    
+            cv2.rectangle(image, (x,y), (x+w, y+h), (0,255,0), 2)
+            cv2.rectangle(image, (x,y-30),(x+w,y),(255,255,255), -1)
+            cv2.putText(image, text, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 0.7,(0,0,0),1)
+    else:
+        text = f'{class_name}: {bb_conf}%'
+        
+        cv2.rectangle(image, (x,y), (x+w, y+h), (0,255,0), 2)
+        cv2.rectangle(image, (x,y-30),(x+w,y),(255,255,255), -1)
+        cv2.putText(image, text, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 0.7,(0,0,0),1)
+        
 
-    # Prepare text for display
-    text = f'{class_name}: {bb_conf}%'
-    
-    # Draw bounding box and label on the image
-    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv2.rectangle(image, (x, y - 30), (x + w, y), (255, 255, 255), -1)
-    cv2.putText(image, text, (x, y - 10), cv2.FONT_HERSHEY_PLAIN, 0.7, (0, 0, 0), 1)
-    
-    # Calculate vertices of the bounding box
-    top_left = (x, y)
-    top_right = (x + w, y)
-    bottom_left = (x, y + h)
-    bottom_right = (x + w, y + h)
-    
-    # Store vertex data in the list
-    vertex_data.append({
-        'class_name': class_name,
-        'confidence': bb_conf,
-        'vertices': {
-            'top_left': top_left,
-            'top_right': top_right,
-            'bottom_left': bottom_left,
-            'bottom_right': bottom_right
-        }
-    })
-
-# Now vertex_data contains all the vertex details of the bounding boxes with their names
-for data in vertex_data:
-    print(f"Class: {data['class_name']}, Confidence: {data['confidence']}%")
-    print(f"Vertices: {data['vertices']}")
 #cv2.imshow('original', img)
 #cv2.imshow('result', result)
-#cv2.imshow('yolo_prediction', image)
+cv2.imshow('yolo_prediction', image)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows
