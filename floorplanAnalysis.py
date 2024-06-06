@@ -6,7 +6,7 @@ import os
 import yaml
 from yaml.loader import SafeLoader 
 
-pytesseract.pytesseract.tesseract_cmd = "C:\\Users\\Jackw\\AppData\\Local\\Programs\\Tesseract-OCR\\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = "C:/Users/Jackw/AppData/Local/Programs/Tesseract-OCR/tesseract.exe"
 
 def sharpen_image(image):
     # Convert the image to grayscale if it's not already
@@ -20,19 +20,6 @@ def sharpen_image(image):
     sharpened = cv2.addWeighted(image, 2, blurred, -1, 0)
 
     return sharpened
-
-def get_room_color(room_type):
-    # Define colors for each room type
-    color_mapping = {
-        "living room": (0, 0, 255),  # Red for living room
-        "food": (0, 255, 0),         # Green for food
-        "utility": (0, 165, 255),    # Orange for utility
-        "bedroom": (128, 0, 128),    # Purple for bedroom
-        "bathroom": (255, 0, 0),     # Blue for bathroom
-        "door": (139, 69, 19),       # Brown for door
-        "unknown": (0, 255, 255)     # Yellow for unknown
-    }
-    return color_mapping.get(room_type, (255, 255, 255))  # Default to white for unknown
 
 
 def get_room_type(text):
@@ -114,7 +101,16 @@ def find_rooms(img, noise_removal_threshold=25, corners_threshold=0.1,
     mask = np.zeros_like(mask)
     cv2.fillPoly(mask, [biggest_contour], 255)
     img[mask == 0] = 1
+    epsilon = 0.01 * cv2.arcLength(biggest_contour, True)  # You can adjust the epsilon value
+    approx_vertices = cv2.approxPolyDP(biggest_contour, epsilon, True)
 
+    # Draw the approximated contour on the image (for visualization)
+    cv2.drawContours(img, [approx_vertices], -1, (0, 255, 0), 3)
+
+    # Print the vertices
+    print("Vertices of the biggest contour:")
+    for vertex in approx_vertices:
+        print(vertex[0])
     # Find the connected components in the house
     ret, labels = cv2.connectedComponents(img)
     img = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
@@ -135,9 +131,6 @@ def find_rooms(img, noise_removal_threshold=25, corners_threshold=0.1,
 
 # Read the original color image
 img = cv2.imread("floorplan.jpeg", cv2.IMREAD_COLOR)
-
-
-
 
 # Convert the image to grayscale
 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -187,7 +180,7 @@ for i, room in enumerate(rooms):
 
     # Determine room type based on the extracted text for the specific room
     room_type = get_room_type(room_text)
-    print(f"Room {i + 1} Type: {room_type}")
+    #print(f"Room {i + 1} Type: {room_type}")
 
     # Get the dimensions of the room
     contours, _ = cv2.findContours(room_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -195,27 +188,16 @@ for i, room in enumerate(rooms):
         largest_contour = max(contours, key=cv2.contourArea)
         x, y, w, h = cv2.boundingRect(largest_contour)
 
-        print(f"Room {i + 1} Dimensions: Width={w} pixels, Height={h} pixels")
+        #print(f"Room {i + 1} Dimensions: Width={w} pixels, Height={h} pixels")
         
         # Get the coordinates of each vertex in the room
         vertices = largest_contour.reshape(-1, 2)
         for vertex in vertices:
             print(f"Vertex: ({vertex[0]}, {vertex[1]})")
             
-    # Get the color for the room type
-    #room_color = get_room_color(room_type)
-
-    # Overlay the colored room on the original image with the assigned color
-    #img[room] = room_color
 
 
     print("------")
-    
-
-
-
-# Display the result
-#small = cv2.resize(result, (0, 0), fx=0.5, fy=0.5)
 
 # load yaml file and yolo model
 with open('yolo\pascal data\data.yaml') as f:
@@ -268,7 +250,7 @@ ds=1
 for i in range(len(detections)):
     row = detections[i]
     confidence = row[4] # confidence of detection of object
-    if confidence > 0.3:
+    if confidence > 0.5:
         class_score = row[5:].max() # take maximum probability of object have 8 objects of all eight objects take the one it is most likely to be
         class_id = row[5:].argmax() # get index position at which maximum probability occurs
         if class_score > 0.25:
@@ -314,7 +296,7 @@ for ind in index:
     class_name = labels[classes_id]
     width = int(w*x_factor)
     height = int(h*y_factor)
-    if class_name == 'door':
+    if class_name == 'door': # rule to make sure doors are comsistent
         if (width * height) > average_area * 0.8 or (width * height) * (width * height) < average_area * 1.15:
             text = f'{class_name}: {bb_conf}%'
     
