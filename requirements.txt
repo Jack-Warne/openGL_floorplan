@@ -3,3 +3,9 @@ numpy
 pygame
 PyGLM
 pywavefront
+opencv-python
+opencv-contrib-python
+os
+PyYAML
+pytesseract
+scipy

@@ -1,0 +1,38 @@
+<annotation>
+	<folder>pascal data</folder>
+	<filename>13.png</filename>
+	<path>C:\Users\Jackw\Documents\GitHub\openGL_floorplan\pascal data\13.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>307</width>
+		<height>493</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>window</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>55</xmin>
+			<ymin>21</ymin>
+			<xmax>211</xmax>
+			<ymax>34</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>stairs</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>40</xmin>
+			<ymin>33</ymin>
+			<xmax>119</xmax>
+			<ymax>167</ymax>
+		</bndbox>
+	</object>
+</annotation>
