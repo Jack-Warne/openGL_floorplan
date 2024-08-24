@@ -1,6 +1,7 @@
 import moderngl as mgl
 import numpy as np
 import glm
+from floorplanAnalysis import analysis
 
 
 class BaseModel:
@@ -86,22 +87,6 @@ class Cube(ExtendedBaseModel):
     def __init__(self, app, vao_name='cube', tex_id=0, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
         super().__init__(app, vao_name, tex_id, pos, rot, scale)
 
-
-class MovingCube(Cube):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def update(self):
-        self.m_model = self.get_model_matrix()
-        super().update()
-
-
-class Cat(ExtendedBaseModel):
-    def __init__(self, app, vao_name='cat', tex_id='cat',
-                 pos=(0, 0, 0), rot=(-90, 0, 0), scale=(1, 1, 1)):
-        super().__init__(app, vao_name, tex_id, pos, rot, scale)
-
-
 class SkyBox(BaseModel):
     def __init__(self, app, vao_name='skybox', tex_id='skybox',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
@@ -137,7 +122,10 @@ class AdvancedSkyBox(BaseModel):
         self.program['u_texture_skybox'] = 0
         self.texture.use(location=0)
 
-
+class Wall(ExtendedBaseModel):
+    def __init__(self, app, vao_name='walls', tex_id=3, 
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(analysis.get_analysis(search_for='scale'), analysis.get_analysis(search_for='scale'), 1)):
+        super().__init__(app, vao_name, tex_id, pos, rot, scale)
 
 
 

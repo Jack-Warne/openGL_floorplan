@@ -1,34 +1,33 @@
 from vbo import VBO
 from shader_program import ShaderProgram
-
-
 class VAO:
     def __init__(self, ctx):
         self.ctx = ctx
         self.vbo = VBO(ctx)
         self.program = ShaderProgram(ctx)
         self.vaos = {}
+        
 
         # cube vao
         self.vaos['cube'] = self.get_vao(
             program=self.program.programs['default'],
             vbo = self.vbo.vbos['cube'])
 
+        # wall vao
+        self.vaos['walls'] = self.get_vao(
+            program=self.program.programs['default'],
+            vbo = self.vbo.vbos['walls'])
+
         # shadow cube vao
         self.vaos['shadow_cube'] = self.get_vao(
             program=self.program.programs['shadow_map'],
             vbo = self.vbo.vbos['cube'])
 
-        # cat vao
-        self.vaos['cat'] = self.get_vao(
-            program=self.program.programs['default'],
-            vbo=self.vbo.vbos['cat'])
-
-        # shadow cat vao
-        self.vaos['shadow_cat'] = self.get_vao(
+        self.vaos['shadow_walls'] = self.get_vao(
             program=self.program.programs['shadow_map'],
-            vbo=self.vbo.vbos['cat'])
+            vbo = self.vbo.vbos['walls'])
 
+        
         # skybox vao
         self.vaos['skybox'] = self.get_vao(
             program=self.program.programs['skybox'],
