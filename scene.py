@@ -1,4 +1,5 @@
 from model import *
+from floorplanAnalysis import analysis
 import glm
 
 
@@ -17,7 +18,7 @@ class Scene:
         app = self.app
         add = self.add_object
 
-        add(Wall(app, pos=(1,1,1)))
+        #add(Wall(app, pos=(1,1,1)))
 
         # floor
         n, s = 20, 2

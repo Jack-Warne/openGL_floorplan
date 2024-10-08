@@ -48,7 +48,7 @@ class analysis:
 
 
         def find_rooms(img, noise_removal_threshold=25, corners_threshold=0.1,
-                    room_closing_max_length=300, gap_in_wall_threshold=300):
+                    room_closing_max_length=300, gap_in_wall_threshold=500):
             """
 
             :param img: grey scale image of rooms, already eroded and doors removed etc.
@@ -133,7 +133,7 @@ class analysis:
 
             return rooms, img, vertices
         # Read the original color image
-        img = cv2.imread("floorplan.jpeg", cv2.IMREAD_COLOR)
+        img = cv2.imread("floorplan1.png", cv2.IMREAD_COLOR)
 
         # Convert the image to grayscale
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -216,7 +216,7 @@ class analysis:
 
         # load image
         # from image get the detections
-        img = cv2.imread('floorplan.jpeg')
+        img = cv2.imread('floorplan1.png')
         image = result.copy()
 
         #cv2.imshow('image', img)
@@ -315,9 +315,9 @@ class analysis:
                 cv2.putText(image, text, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 0.7,(0,0,0),1)
                 
 
-        #cv2.imshow('original', img)
-        #cv2.imshow('result', result)
-        #cv2.imshow('yolo_prediction', image)
+        cv2.imshow('original', img)
+        cv2.imshow('result', result)
+        cv2.imshow('yolo_prediction', image)
 
         #cv2.waitKey(0)
         #cv2.destroyAllWindows

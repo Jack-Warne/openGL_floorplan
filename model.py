@@ -123,9 +123,9 @@ class AdvancedSkyBox(BaseModel):
         self.texture.use(location=0)
 
 class Wall(ExtendedBaseModel):
-    def __init__(self, app, vao_name='walls', tex_id=3, 
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(analysis.get_analysis(search_for='scale'), analysis.get_analysis(search_for='scale'), 1)):
+    def __init__(self, app, vao_name='cube', tex_id=0, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
         super().__init__(app, vao_name, tex_id, pos, rot, scale)
+
 
 
 
