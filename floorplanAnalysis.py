@@ -133,7 +133,7 @@ class analysis:
 
             return rooms, img, vertices
         # Read the original color image
-        img = cv2.imread("floorplan1.png", cv2.IMREAD_COLOR)
+        img = cv2.imread("floorplan.jpeg", cv2.IMREAD_COLOR)
 
         # Convert the image to grayscale
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -216,7 +216,7 @@ class analysis:
 
         # load image
         # from image get the detections
-        img = cv2.imread('floorplan1.png')
+        img = cv2.imread('floorplan.jpeg')
         image = result.copy()
 
         #cv2.imshow('image', img)
@@ -251,6 +251,8 @@ class analysis:
         door_sizes =[]
         ds=1
 
+        door_widths = []
+
         for i in range(len(detections)):
             row = detections[i]
             confidence = row[4] # confidence of detection of object
@@ -269,6 +271,10 @@ class analysis:
                     box = np.array([left,top,width,height])
                     if labels[class_id] == 'door':
                         door_sizes.append(width*height)
+                        if height < width:
+                            door_widths.append(height)
+                        else:
+                            door_widths.append(width)
                         ds = ds + 1  
 
                     # append values into the list
@@ -300,8 +306,8 @@ class analysis:
             class_name = labels[classes_id]
             width = int(w*x_factor)
             height = int(h*y_factor)
-            if class_name == 'door': # rule to make sure doors are comsistent
-                if (width * height) > average_area * 0.8 or (width * height) * (width * height) < average_area * 1.15:
+            if class_name == 'door': # rule to make sure doors are consistent
+                if (width * height) > average_area * 0.8 or (width * height) < average_area * 1.15:
                     text = f'{class_name}: {bb_conf}%'
             
                     cv2.rectangle(image, (x,y), (x+w, y+h), (0,255,0), 2)
@@ -315,9 +321,9 @@ class analysis:
                 cv2.putText(image, text, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 0.7,(0,0,0),1)
                 
 
-        cv2.imshow('original', img)
-        cv2.imshow('result', result)
-        cv2.imshow('yolo_prediction', image)
+        #cv2.imshow('original', img)
+        #cv2.imshow('result', result)
+        #cv2.imshow('yolo_prediction', image)
 
         #cv2.waitKey(0)
         #cv2.destroyAllWindows
@@ -326,5 +332,10 @@ class analysis:
             #print(walls)
             return walls
         elif search_for == 'scale':
-            scale_factor  = 9000 / (average_area ** 2)
+            # 9000 because it would be 900mm wide (90cm) therefore the number of pixels in a that area is equal to 9000mm which gives a scale of px to mm
+            # the reason for average area is because doors are translated 90 degrees meaning that they will have different width and height on the orientation 
+            # but should still cover the same area although this does take some assumptions it is a reliable way to get scale despite not being totally accurate
+            
+            scale_factor  =  (sum(door_widths)/ len(door_widths)) / 900
+            print("there are ", scale_factor, "pixels per mm")
             return scale_factor

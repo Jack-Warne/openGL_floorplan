@@ -52,6 +52,8 @@ class CubeVBO(BaseVBO):
         vertices = [(-1, -1, 1), ( 1, -1,  1), (1,  1,  1), (-1, 1,  1),
                     (-1, 1, -1), (-1, -1, -1), (1, -1, -1), ( 1, 1, -1)]
 
+        
+
         indices = [(0, 2, 3), (0, 1, 2),
                    (1, 7, 2), (1, 6, 7),
                    (6, 5, 4), (4, 7, 6),
@@ -135,7 +137,10 @@ class wallVBO(BaseVBO):
     def get_vertex_data(self):
         vertices = [(-1, -1, 1), ( 1, -1,  1), (1,  1,  1), (-1, 1,  1),
                     (-1, 1, -1), (-1, -1, -1), (1, -1, -1), ( 1, 1, -1)]
+        wall_scale = analysis.get_analysis(search_for='scale')
 
+        vertices = [(x * wall_scale, y * wall_scale, z * wall_scale)for (x, y, z) in vertices]
+        
         indices = [(0, 2, 3), (0, 1, 2),
                    (1, 7, 2), (1, 6, 7),
                    (6, 5, 4), (4, 7, 6),

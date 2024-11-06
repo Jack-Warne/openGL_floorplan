@@ -1,7 +1,7 @@
 import moderngl as mgl
 import numpy as np
 import glm
-from floorplanAnalysis import analysis
+#from floorplanAnalysis import analysis
 
 
 class BaseModel:
