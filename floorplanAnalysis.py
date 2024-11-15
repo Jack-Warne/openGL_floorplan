@@ -335,7 +335,8 @@ class analysis:
             # 9000 because it would be 900mm wide (90cm) therefore the number of pixels in a that area is equal to 9000mm which gives a scale of px to mm
             # the reason for average area is because doors are translated 90 degrees meaning that they will have different width and height on the orientation 
             # but should still cover the same area although this does take some assumptions it is a reliable way to get scale despite not being totally accurate
+            # ignore above changing scale from mm to cm because want to save processing power :)
             
-            scale_factor  =  (sum(door_widths)/ len(door_widths)) / 900
+            scale_factor  =  (sum(door_widths)/ len(door_widths)) / 90
             print("there are ", scale_factor, "pixels per mm")
             return scale_factor
