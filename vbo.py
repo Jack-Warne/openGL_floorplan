@@ -82,7 +82,7 @@ class CubeVBO(BaseVBO):
         vertex_data = np.hstack([normals, vertex_data])
         vertex_data = np.hstack([tex_coord_data, vertex_data])
         return vertex_data
-
+    
 class SkyBoxVBO(BaseVBO):
     def __init__(self, ctx):
         super().__init__(ctx)
@@ -138,6 +138,7 @@ class wallVBO(BaseVBO):
         vertices = [(-1, -1, 1), ( 1, -1,  1), (1,  1,  1), (-1, 1,  1),
                     (-1, 1, -1), (-1, -1, -1), (1, -1, -1), ( 1, 1, -1)]
         wall_scale = analysis.get_analysis(search_for='scale')
+        wall_scale = wall_scale
 
         vertices = [(x * wall_scale, y * wall_scale, z * wall_scale)for (x, y, z) in vertices]
         
@@ -169,3 +170,4 @@ class wallVBO(BaseVBO):
         vertex_data = np.hstack([normals, vertex_data])
         vertex_data = np.hstack([tex_coord_data, vertex_data])
         return vertex_data
+    

@@ -86,7 +86,18 @@ class ExtendedBaseModel(BaseModel):
 class Cube(ExtendedBaseModel):
     def __init__(self, app, vao_name='cube', tex_id=0, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
         super().__init__(app, vao_name, tex_id, pos, rot, scale)
-
+    def get_bounding_box(self):
+        min_pos = [self.pos[i] - self.scale[i] / 2 for i in range(3)]
+        max_pos = [self.pos[i] + self.scale[i] / 2 for i in range(3)]
+        return (min_pos, max_pos)
+    def is_inside_frustum(self, frustum_planes):
+        # Check if the object's position is inside all six planes of the frustum
+        for plane in frustum_planes:
+            a, b, c, d = plane
+            x, y, z = self.pos
+            if a * x + b * y + c * z + d < 0:
+                return False  # Outside this plane
+        return True  # Inside all planes
 class SkyBox(BaseModel):
     def __init__(self, app, vao_name='skybox', tex_id='skybox',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
@@ -123,10 +134,20 @@ class AdvancedSkyBox(BaseModel):
         self.texture.use(location=0)
 
 class Wall(ExtendedBaseModel):
-    def __init__(self, app, vao_name='walls', tex_id=0, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+    def __init__(self, app, vao_name='cube', tex_id=0, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
         super().__init__(app, vao_name, tex_id, pos, rot, scale)
-
-
+    def get_bounding_box(self):
+        min_pos = [self.pos[i] - self.scale[i] / 2 for i in range(3)]
+        max_pos = [self.pos[i] + self.scale[i] / 2 for i in range(3)]
+        return (min_pos, max_pos)
+    def is_inside_frustum(self, frustum_planes):
+        # Check if the object's position is inside all six planes of the frustum
+        for plane in frustum_planes:
+            a, b, c, d = plane
+            x, y, z = self.pos
+            if a * x + b * y + c * z + d < 0:
+                return False  # Outside this plane
+        return True  # Inside all planes
 
 
 

@@ -26,6 +26,10 @@ class SceneRenderer:
         self.render_shadow()
         # pass 2
         self.main_render()
+        # pass 3
+        for obj in self.scene.objects:
+            obj.render()
+
 
     def destroy(self):
         self.depth_fbo.release()
