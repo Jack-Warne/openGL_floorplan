@@ -1,4 +1,4 @@
-from chunk import Chunk
+from chunk_loader import Chunk
 from frustrum import Frustrum
 from model import *
 import numpy as np
@@ -10,6 +10,8 @@ class Scene:
         self.objects = []
         self.all_chunks = []  # Store all chunks
         self.load()
+        # skybox
+        self.skybox = AdvancedSkyBox(app)
 
     def add_object(self, obj):
         self.objects.append(obj)
