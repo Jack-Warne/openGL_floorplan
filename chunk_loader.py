@@ -15,14 +15,12 @@ class Chunk:
 
     def is_inside_frustum(self, frustum_planes):
         """
-        Check if this chunk's bounding sphere intersects the view frustum.
-        :param frustum_planes: Frustum planes for culling.
-        :return: True if inside the frustum, False otherwise.
+        Check if this chunk's AABB intersects the view frustum.
         """
-        chunk_center = (
-            self.chunk_pos[0] + self.chunk_size / 2,
-            self.chunk_pos[1] + self.chunk_size / 2,
-            self.chunk_pos[2] + self.chunk_size / 2,
+        aabb_min = self.chunk_pos
+        aabb_max = (
+            self.chunk_pos[0] + self.chunk_size,
+            self.chunk_pos[1] + self.chunk_size,
+            self.chunk_pos[2] + self.chunk_size,
         )
-        radius = self.chunk_size / 2
-        return Frustrum.is_inside_frustum(chunk_center, frustum_planes, radius)
+        return Frustrum.is_in_frustum(aabb_min, aabb_max, frustum_planes)

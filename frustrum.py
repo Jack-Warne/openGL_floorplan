@@ -27,25 +27,28 @@ class Frustrum:
             planes[i] = (x / length, y / length, z / length, w / length)
 
         return planes
-    def is_in_frustum(planes, bounding_box):
+    def is_in_frustum(aabb_min, aabb_max, planes):
         """
-        Check if a bounding box is inside the frustum.
-        bounding_box: ((min_x, min_y, min_z), (max_x, max_y, max_z))
-        planes: list of frustum planes [(a, b, c, d), ...]
+        Check if an AABB (axis-aligned bounding box) is inside the view frustum.
+        :param aabb_min: Minimum corner of the AABB (x_min, y_min, z_min).
+        :param aabb_max: Maximum corner of the AABB (x_max, y_max, z_max).
+        :param planes: Frustum planes, where each plane is (a, b, c, d) for ax + by + cz + d = 0.
+        :return: True if the AABB intersects the frustum, False otherwise.
         """
         for plane in planes:
-            normal = plane[:3]
-            d = plane[3]
-
-            # Find the point on the bounding box that is farthest along the normal
-            far_point = [
-                bounding_box[1][i] if normal[i] > 0 else bounding_box[0][i]
-                for i in range(3)
-            ]
-            # Check if this point is outside the plane
-            if np.dot(normal, far_point) + d < 0:
-                return False  # Outside the frustum
-        return True
+            a, b, c, d = plane
+            # Test all 8 corners of the AABB against the current plane
+            if (a * aabb_min[0] + b * aabb_min[1] + c * aabb_min[2] + d > 0 or
+                a * aabb_max[0] + b * aabb_min[1] + c * aabb_min[2] + d > 0 or
+                a * aabb_min[0] + b * aabb_max[1] + c * aabb_min[2] + d > 0 or
+                a * aabb_max[0] + b * aabb_max[1] + c * aabb_min[2] + d > 0 or
+                a * aabb_min[0] + b * aabb_min[1] + c * aabb_max[2] + d > 0 or
+                a * aabb_max[0] + b * aabb_min[1] + c * aabb_max[2] + d > 0 or
+                a * aabb_min[0] + b * aabb_max[1] + c * aabb_max[2] + d > 0 or
+                a * aabb_max[0] + b * aabb_max[1] + c * aabb_max[2] + d > 0):
+                continue  # At least one corner is in front of this plane
+            return False  # All corners are behind this plane
+        return True  # AABB intersects the frustum
     def is_inside_frustum(center, planes, radius):
         """
         Check if a sphere (center, radius) intersects the view frustum.

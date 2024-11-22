@@ -104,7 +104,7 @@ class Scene:
             if chunk.is_inside_frustum(frustum_planes):
                 visible_chunks.append(chunk)
 
-        # Update objects with cubes from visible chunks
         self.objects = []
         for chunk in visible_chunks:
             self.objects.extend(chunk.cubes)
+
