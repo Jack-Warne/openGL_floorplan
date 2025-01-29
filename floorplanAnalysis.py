@@ -11,7 +11,34 @@ class analysis:
     def __init__(self): 
         pass
     
+    
     def get_analysis(search_for):
+        def align_to_wall(wall_start, wall_end, door_center_x, door_center_y):
+            """Align a door to be flush with a wall segment."""
+            x1, y1 = wall_start
+            x2, y2 = wall_end
+
+            # If the wall is vertical, align the door's x-coordinate
+            if x1 == x2:
+                aligned_x = x1
+                aligned_y = door_center_y
+
+            # If the wall is horizontal, align the door's y-coordinate
+            elif y1 == y2:
+                aligned_x = door_center_x
+                aligned_y = y1
+
+            # For diagonal walls, align to the closest point on the line segment
+            else:
+                # Calculate the closest point on the line to the door center
+                dx = x2 - x1
+                dy = y2 - y1
+                t = ((door_center_x - x1) * dx + (door_center_y - y1) * dy) / (dx ** 2 + dy ** 2)
+                t = max(0, min(1, t))  # Clamp t to the segment [0, 1]
+                aligned_x = x1 + t * dx
+                aligned_y = y1 + t * dy
+
+            return int(aligned_x), int(aligned_y)
         def sharpen_image(image):
             # Convert the image to grayscale if it's not already
             if len(image.shape) == 3:
@@ -157,7 +184,7 @@ class analysis:
 
        # print(walls)
         # Perform OCR on the original image to extract text
-        text = pytesseract.image_to_string(sharpened_image, config='--psm 11')
+        text = pytesseract.image_to_string(img, config='--psm 11')
 
         # Print the OCR output for debugging
        # print("OCR Output:", text)
@@ -326,7 +353,7 @@ class analysis:
         #cv2.imshow('yolo_prediction', image)
 
         #cv2.waitKey(0)
-        #cv2.destroyAllWindows
+        #cv2.destroyAllWindowsa
 
         if search_for == 'walls':
             #print(walls)
@@ -340,3 +367,56 @@ class analysis:
             scale_factor  =  (sum(door_widths)/ len(door_widths)) / 90
             print("there are ", scale_factor, "pixels per mm")
             return scale_factor
+        
+        if search_for == 'doors':
+            # Store flushed door data
+            flushed_doors = []
+
+            for ind in index:
+                # Extract bounding box
+                x, y, w, h = boxes_np[ind]
+                classes_id = classes[ind]
+                class_name = labels[classes_id]
+
+                if class_name == 'door':  # Process only doors
+                    door_center_x = x + w // 2
+                    door_center_y = y + h // 2
+
+                    # Find the closest wall
+                    closest_wall = None
+                    min_distance = float('inf')
+                    for i in range(len(walls) - 1):
+                        wall_start = walls[i]
+                        wall_end = walls[i + 1]
+
+                        # Compute the distance from the door's center to the wall segment
+                        px, py = door_center_x, door_center_y
+                        x1, y1 = wall_start
+                        x2, y2 = wall_end
+                        distance = np.abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) / (
+                            ((y2 - y1) ** 2 + (x2 - x1) ** 2) ** 0.5
+                        )
+
+                        # Update if this wall is closer
+                        if distance < min_distance:
+                            min_distance = distance
+                            closest_wall = (wall_start, wall_end)
+
+                    # Align the door coordinates to the closest wall
+                    if closest_wall:
+                        wall_start, wall_end = closest_wall
+                        aligned_x, aligned_y = align_to_wall(wall_start, wall_end, door_center_x, door_center_y)
+
+                        # Add the flushed door information
+                        flushed_doors.append({
+                            'door_coordinates': (aligned_x, aligned_y, w, h),
+                            'closest_wall': closest_wall,
+                            'distance_to_wall': min_distance
+                        })
+
+            return flushed_doors
+
+
+
+        
+        

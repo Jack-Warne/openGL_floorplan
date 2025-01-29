@@ -24,7 +24,7 @@ class Scene:
         wall_coordinates = analysis.get_analysis(search_for='walls')
         wall_scale = analysis.get_analysis(search_for='scale')
 
-        coordinates_3d = [(x, 0, y) for x, y in wall_coordinates]
+        coordinates_3d = [(x*0.1, 0, y*0.1) for x, y in wall_coordinates]
         coordinates_3d.append(coordinates_3d[0])  # Close the loop
 
         # Floor
@@ -36,7 +36,7 @@ class Scene:
         # Add cubes along the perimeter and group them into chunks
         self.fill_perimeter_with_cubes(coordinates_3d, wall_scale)
 
-    def fill_perimeter_with_cubes(self, wall_coordinates, wall_scale, max_y=240, height_step=1.0):
+    def fill_perimeter_with_cubes(self, wall_coordinates, wall_scale, max_y=24, height_step=1.0):
         """
         Fill the perimeter defined by wall coordinates with cubes and organize them into chunks.
         """
