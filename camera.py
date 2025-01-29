@@ -1,12 +1,6 @@
 import glm
 import pygame as pg
-
-FOV = 50  # deg
-NEAR = 0.1
-FAR = 100
-SPEED = 0.005
-SENSITIVITY = 0.04
-
+from settings import *
 
 class Camera:
     def __init__(self, app, position=(0, 0, 4), yaw=-90, pitch=0):

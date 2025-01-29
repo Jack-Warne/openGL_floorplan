@@ -72,6 +72,8 @@ class analysis:
             elif any(keyword in text_lower for keyword in ["store", "utility", "toilet"]):
                # print("identified Text:", text)  # Print the unidentified text for debugging
                 return "utility"
+            else:
+                return "default"
 
 
         def find_rooms(img, noise_removal_threshold=25, corners_threshold=0.1,
@@ -193,7 +195,9 @@ class analysis:
 
         alpha = 0.6  # Adjust the alpha value for a darker overlay
         result = cv2.addWeighted(img, alpha, colored_house, 1 - alpha, 0)
-
+        
+        
+        room_data = []
         for i, room in enumerate(rooms):
             # Extract the specific region for the room
             room_region = 255 * room.astype(np.uint8)
@@ -225,6 +229,7 @@ class analysis:
                 vertices = largest_contour.reshape(-1, 2)
                 for vertex in vertices:...
                     #print(f"Vertex: ({vertex[0]}, {vertex[1]})")
+                room_data.append([room_type, vertices])
                     
 
 
@@ -415,6 +420,9 @@ class analysis:
                         })
 
             return flushed_doors
+        
+        if search_for == "rooms":
+            return room_data
 
 
 

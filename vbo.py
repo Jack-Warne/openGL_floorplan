@@ -3,7 +3,7 @@ import moderngl as mgl
 import pywavefront
 from floorplanAnalysis import analysis
 from scipy.spatial import ConvexHull
-
+from settings import *
 
 class VBO:
     def __init__(self, ctx):
@@ -137,10 +137,9 @@ class wallVBO(BaseVBO):
     def get_vertex_data(self):
         vertices = [(-1, -1, 1), ( 1, -1,  1), (1,  1,  1), (-1, 1,  1),
                     (-1, 1, -1), (-1, -1, -1), (1, -1, -1), ( 1, 1, -1)]
-        wall_scale = analysis.get_analysis(search_for='scale')
-        wall_scale = wall_scale
+        
 
-        vertices = [(x * wall_scale, y * wall_scale, z * wall_scale)for (x, y, z) in vertices]
+        vertices = [(x * WALL_SCALE, y * WALL_SCALE, z * WALL_SCALE)for (x, y, z) in vertices]
         
         indices = [(0, 2, 3), (0, 1, 2),
                    (1, 7, 2), (1, 6, 7),
