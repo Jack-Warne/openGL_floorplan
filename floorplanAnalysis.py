@@ -63,7 +63,7 @@ class analysis:
             elif any(keyword in text_lower for keyword in ["living room", "living area", "lounge", "office", "sitting area"]):
               #  print("identified Text:", text)  # Print the unidentified text for debugging
                 return "living room"
-            elif any(keyword in text_lower for keyword in ["bathroom", "wc", "toilet", "en-suite", "en suite"]):
+            elif any(keyword in text_lower for keyword in ["bathroom", "wc", "toilet", "en-suite", "en suite", "shower"]):
                # print("identified Text:", text)  # Print the unidentified text for debugging
                 return "bathroom"
             elif any(keyword in text_lower for keyword in ["dining", "kitchen"]):
@@ -77,7 +77,7 @@ class analysis:
 
 
         def find_rooms(img, noise_removal_threshold=25, corners_threshold=0.1,
-                    room_closing_max_length=300, gap_in_wall_threshold=500):
+                    room_closing_max_length=200, gap_in_wall_threshold=600):
             """
 
             :param img: grey scale image of rooms, already eroded and doors removed etc.
@@ -189,7 +189,7 @@ class analysis:
         text = pytesseract.image_to_string(img, config='--psm 11')
 
         # Print the OCR output for debugging
-       # print("OCR Output:", text)
+        #print("OCR Output:", text)
 
         # Overlay the colored rooms on the original image
 
@@ -212,6 +212,7 @@ class analysis:
             # Perform OCR on the room's ROI 
             # PSM 11 used as it yielded the most accurate results compared to psm 6 being the next most accurate
             room_text = pytesseract.image_to_string(room_roi, config='--psm 11')
+            print(room_text)
 
             # Determine room type based on the extracted text for the specific room
             room_type = get_room_type(room_text)
@@ -353,9 +354,12 @@ class analysis:
                 cv2.putText(image, text, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 0.7,(0,0,0),1)
                 
 
-        #cv2.imshow('original', img)
-        #cv2.imshow('result', result)
-        #cv2.imshow('yolo_prediction', image)
+        cv2.imshow('original', img)
+        cv2.imshow('Binary', binary_img)
+        cv2.imshow('noise reduction', erosion)
+        cv2.imshow('sharpened', sharpened_image)
+        cv2.imshow('result', result)
+        cv2.imshow('yolo_prediction', image)
 
         #cv2.waitKey(0)
         #cv2.destroyAllWindowsa

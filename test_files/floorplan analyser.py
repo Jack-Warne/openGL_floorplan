@@ -44,7 +44,7 @@ def get_room_type(text):
 
 
 def find_rooms(img, noise_removal_threshold=40, corners_threshold=0.1,
-            room_closing_max_length=300, gap_in_wall_threshold=300):
+            room_closing_max_length=300, gap_in_wall_threshold=400):
     """
 
     :param img: grey scale image of rooms, already eroded and doors removed etc.
@@ -212,7 +212,7 @@ yolo.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
 # load image
 # from image get the detections
-img = cv2.imread('floorplan.jpeg')
+img = cv2.imread('floorplan1.jpg')
 image = result.copy()
 
 #cv2.imshow('image', img)

@@ -34,10 +34,10 @@ class Scene:
             vertices.append(item[1])    # Append the vertices
 
         # Map room types to texture IDs
-        texture_map = {
-            'default': 3,  # Default texture ID for walls
-            'bedroom': 5,  # Texture ID for bedroom walls
-        }
+        for room in room_types:
+            print(room)
+        for vertex in vertices:
+            print(vertex)
 
         # Ensure no duplicate door coordinates
         flushed_doors = self.filter_duplicate_doors(flushed_doors)
@@ -64,9 +64,9 @@ class Scene:
         self.fill_perimeter_with_cubes(coordinates_3d)
 
         # Fill rooms with flat surfaces at y = 0 based on room type
-        self.fill_rooms_with_flat_surfaces(room_types, vertices, texture_map)
+        self.fill_rooms_with_flat_surfaces(room_types, vertices)
 
-    def fill_rooms_with_flat_surfaces(self, room_types, vertices, texture_map):
+    def fill_rooms_with_flat_surfaces(self, room_types, vertices):
         """
         Fill the interior area defined by room vertices with flat surfaces at y = 0,
         using textures based on room type.
